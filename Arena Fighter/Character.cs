@@ -63,7 +63,7 @@ namespace Arena_Fighter
 
             return Name;
         }
-        private string CreateCharacterClass(string Class)
+        private string CreateCharacterClass(string ClassName)
         {
             bool areYouSure = false;
             bool validSelection = true;
@@ -80,27 +80,27 @@ namespace Arena_Fighter
                     {
                         case "1":
                         case "WARRIOR":
-                            Class = "Warrior";
+                            ClassName = "Warrior";
                             Console.WriteLine("Warrior info:");
                             break;
                         case "2":
                         case "MAGE":
-                            Class = "Mage";
+                            ClassName = "Mage";
                             Console.WriteLine("Mage info:");
                             break;
                         case "3":
                         case "SCOUT":
-                            Class = "Scout";
+                            ClassName = "Scout";
                             Console.WriteLine("Scout info:");
                             break;
                         case "4":
                         case "THIEF":
-                            Class = "Thief";
+                            ClassName = "Thief";
                             Console.WriteLine("Thief info:");
                             break;
                         case "5":
                         case "CUSTOM":
-                            Class = "Custom";
+                            ClassName = "Custom";
                             Console.WriteLine("Custom info:");
                             break;
                         default:
@@ -108,7 +108,7 @@ namespace Arena_Fighter
                             break;
                     }
                 } while (!validSelection);
-                Console.WriteLine("Are you sure you want to be a {0}-class?", Class);
+                Console.WriteLine("Are you sure you want to be a {0}-class?", ClassName);
                 Console.WriteLine("Y - Yes\nN - No");
                 op = Console.ReadLine().ToUpper();
                 switch (op)
@@ -123,7 +123,7 @@ namespace Arena_Fighter
                 }
             } while (!areYouSure);
 
-            return Class;
+            return ClassName;
         }
         private (int, int, int) GenerateCharacterStats(int Strength, int Health, int Defence, string Class)
         {

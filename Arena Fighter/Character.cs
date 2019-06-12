@@ -6,13 +6,32 @@ namespace Arena_Fighter
 {
     public class Character
     {
+        public string Name { get; private set; }
+        public string ClassName { get; private set; }
+        public int Strength { get; private set; }
+        public int Health { get; set; }
+        public int Defence { get; private set; }
+        public int Damage { get; set; }
+        public int Armor { get; set; }
+        public int SkillPoints { get; private set; }
+        public int HealthPotions { get; set; }
+        public int Gold { get; set; }
+        public Character()
+        {
+            Name = CreateCharacterName(Name);
 
+            ClassName = CreateCharacterClass(ClassName);
 
+            if (ClassName == "Custom")
+                (Strength, Health, Defence) = CreateCharacterStats(Strength, Health, Defence);
+            else
+                (Strength, Health, Defence) = GenerateCharacterStats(Strength, Health, Defence, ClassName);
 
+            (Damage, Armor, HealthPotions, Gold) = GenerateCharacterEquipment(Damage, Armor, HealthPotions, Gold, ClassName);
 
-
-
-        public static string CreateCharacterName(string characterName)
+            SkillPoints = 0; ;
+        }
+        private string CreateCharacterName(string Name)
         {
             bool areYouSure = false;
             bool validName = true;
@@ -22,12 +41,12 @@ namespace Arena_Fighter
                 {
                     Console.Clear();
                     Console.Write("Enter the name of your character: ");
-                    characterName = Console.ReadLine();
-                    if (characterName.Length > 15 || String.IsNullOrWhiteSpace(characterName))
+                    Name = Console.ReadLine();
+                    if (Name.Length > 15 || String.IsNullOrWhiteSpace(Name))
                         validName = false;
                     //else if CHARACTER WHITELIST
                 } while (!validName);
-                Console.WriteLine("Are you sure you want to be called {0}?", characterName);
+                Console.WriteLine("Are you sure you want to be called {0}?", Name);
                 Console.WriteLine("Y - Yes\nN - No");
                 var op = Console.ReadLine().ToUpper();
                 switch (op)
@@ -42,9 +61,9 @@ namespace Arena_Fighter
                 }
             } while (!areYouSure);
 
-            return characterName;
+            return Name;
         }
-        public static string CreateCharacterClass(string characterClass)
+        private string CreateCharacterClass(string Class)
         {
             bool areYouSure = false;
             bool validSelection = true;
@@ -61,27 +80,27 @@ namespace Arena_Fighter
                     {
                         case "1":
                         case "WARRIOR":
-                            characterClass = "Warrior";
+                            Class = "Warrior";
                             Console.WriteLine("Warrior info:");
                             break;
                         case "2":
                         case "MAGE":
-                            characterClass = "Mage";
+                            Class = "Mage";
                             Console.WriteLine("Mage info:");
                             break;
                         case "3":
                         case "SCOUT":
-                            characterClass = "Scout";
+                            Class = "Scout";
                             Console.WriteLine("Scout info:");
                             break;
                         case "4":
                         case "THIEF":
-                            characterClass = "Thief";
+                            Class = "Thief";
                             Console.WriteLine("Thief info:");
                             break;
                         case "5":
                         case "CUSTOM":
-                            characterClass = "Custom";
+                            Class = "Custom";
                             Console.WriteLine("Custom info:");
                             break;
                         default:
@@ -89,7 +108,7 @@ namespace Arena_Fighter
                             break;
                     }
                 } while (!validSelection);
-                Console.WriteLine("Are you sure you want to be a {0}-class?", characterClass);
+                Console.WriteLine("Are you sure you want to be a {0}-class?", Class);
                 Console.WriteLine("Y - Yes\nN - No");
                 op = Console.ReadLine().ToUpper();
                 switch (op)
@@ -104,60 +123,66 @@ namespace Arena_Fighter
                 }
             } while (!areYouSure);
 
-            return characterClass;
+            return Class;
         }
-        public static (int, int, int) GenerateCharacterStats(int characterStrength, int characterHealth, int characterDefence, string characterClass)
+        private (int, int, int) GenerateCharacterStats(int Strength, int Health, int Defence, string Class)
         {
-            switch (characterClass)
+            switch (ClassName)
             {
                 case "Warrior":
-                    characterStrength = 5;
-                    characterHealth = 5;
+                    Strength = 5;
+                    Health = 5;
                     break;
                 case "Mage":
-                    characterStrength = 3;
-                    characterHealth = 3;
-                    characterDefence = 2;
-                    //healthPotion = 1;
+                    Strength = 3;
+                    Health = 3;
+                    Defence = 2;
                     break;
             }
 
-            return (characterStrength, characterHealth, characterDefence);
+            return (Strength, Health, Defence);
         }
-        public static void GenerateCharacterEquipment(string characterClass)
+        private (int, int, int, int) GenerateCharacterEquipment(int Damage, int Armor, int HealthPotions, int Gold, string Class)
         {
-            switch (characterClass)
+            switch (ClassName)
             {
                 case "Warrior":
-                    //swordLevel = 1;
+                    Armor = 2;
                     break;
                 case "Mage":
-                    //healthPotion = 1;
+                    HealthPotions = 1;
+                    break;
+                case "Scout":
+                    Damage = 2;
+                    break;
+                case "Thief":
                     break;
                 case "Custom":
-                    //gold = 50;
+                    Gold = 50;
                     break;
             }
+            return (Damage, Armor, HealthPotions, Gold);
         }
-        public static (int, int, int, int) CreateCharacterStats(int characterStrength, int characterHealth, int characterDefence, int skillPoints)
+        private (int, int, int) CreateCharacterStats(int Strength, int Health, int Defence)
         {
+            var skillPoints = 10;
             for (int i = skillPoints; i > 0; i--)
             {
                 Console.Clear();
-                Console.WriteLine("Strength: " + characterStrength + "\nHealth: " + characterHealth + "\nDefence: " + characterDefence + "\nSkillpoints Remaining: " + skillPoints);
+                Console.WriteLine("Strength: " + Strength + "\nHealth: " + Health + "\nDefence: " + Defence + "\nSkillpoints Remaining: " + skillPoints);
                 Console.WriteLine("1 - Strength\n2 - Health\n3 - Defence");
                 Console.Write("Allocate skillpoints to your preferred skill: ");
                 var op = Console.ReadLine();
                 switch (op)
                 {
                     case "1":
-                        characterStrength += 1;
+                        Strength += 1;
                         break;
                     case "2":
-                        characterHealth += 1;
+                        Health += 1;
                         break;
                     case "3":
-                        characterDefence += 1;
+                        Defence += 1;
                         break;
                     default:
                         break;
@@ -165,7 +190,8 @@ namespace Arena_Fighter
                 skillPoints -= 1;
             }
 
-            return (characterStrength, characterHealth, characterDefence, skillPoints);
+            return (Strength, Health, Defence);
         }
     }
 }
+

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace Arena_Fighter
 {
@@ -6,43 +7,26 @@ namespace Arena_Fighter
     {
         static void Main(string[] args)
         {
-            var characterName = "";
-            var characterClass = "";
-            var characterStrength = 0;
-            var characterHealth = 0;
-            var characterDefence = 0;
-            var characterDamage = 1;
-            var skillPoints = 10;
-            var gold = 0;
+            bool retired = false;
+            var day = 1;
+            Character player = new Character();
+            StringBuilder combatLog = new StringBuilder();
 
-            characterName = Character.CreateCharacterName(characterName);
-            characterClass = Character.CreateCharacterClass(characterClass);
+            while (!retired && player.Health > 0)
+            {
+                Console.Clear();
+                Graphics.DrawStats(player);
 
-            if (characterClass == "Custom")
-                (characterStrength, characterHealth, characterDefence, skillPoints)
-                    = Character.CreateCharacterStats(characterStrength, characterHealth, characterDefence, skillPoints);
-            else
-                (characterStrength, characterHealth, characterDefence) 
-                    = Character.GenerateCharacterStats(characterStrength, characterHealth, characterDefence, characterClass);
+                Gameplay game = new Gameplay();
+                game.Events(player, combatLog, day);
+                Console.ReadKey();
 
 
-            //DrawHUD()
-            Console.WriteLine(characterClass + " " + characterName);
-            Console.WriteLine("Character Strength: " + characterStrength);
-            Console.WriteLine("Character Health: " + characterHealth);
-            Console.WriteLine("Armor Level: " + characterDefence);
-            Console.WriteLine("Weaponry Level: " + characterDamage);
-            Console.WriteLine("Skillpoints: " + skillPoints);
-            Console.WriteLine("Gold: " + gold);
+                day++;
+            } 
+            Console.Clear();
+            Console.WriteLine(combatLog);
             Console.ReadKey();
-
-
-
-
-
-
-
-
-        }
+        }           
     }
 }

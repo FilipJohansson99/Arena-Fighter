@@ -48,6 +48,7 @@ namespace Arena_Fighter
                         validName = false;
                     //else if CHARACTER WHITELIST
                 } while (!validName);
+
                 Console.WriteLine("Are you sure you want to be called {0}?", characterName);
                 Console.WriteLine("Y - Yes\nN - No");
                 var op = Console.ReadLine().ToUpper();

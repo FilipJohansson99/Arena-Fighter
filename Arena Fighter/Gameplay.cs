@@ -17,8 +17,10 @@ namespace Arena_Fighter
             var max = 11;
             var randomEvent = Randomizer(min, max);
             var eventTitle = "";
-            var consequence = "";
+            StringBuilder consequence = new StringBuilder();
 
+            Console.WriteLine("--EVENTS--");
+            Console.WriteLine($"Day: {day}");
             switch (randomEvent)
             {
                 case 1:
@@ -28,80 +30,154 @@ namespace Arena_Fighter
                 case 5:
                 case 6:
                     eventTitle = "Duel";
-                    consequence = "";
-                        //EventBattle();
+                    consequence.Append(EventBattle(player));
+
                     break;
                 case 7:
-                    eventTitle = "You fell over...";
-                    consequence = "You took 1 health worth of damage.";
+                    eventTitle = "You injured yourself";
+                    consequence.Append("\tYou took 1 health worth of damage.");
                     player.Health--;
                     break;
                 case 8:
                     eventTitle = "Travelling Merchant";
-                    consequence = EventMerchant(player);
+                    consequence.Append(EventMerchant(player));
                     break;
                 case 9:
-                    eventTitle = "Tavern";                        
-                    consequence = EventTavern(player);
+                    eventTitle = "Tavern";
+                    consequence.Append(EventTavern(player));
                     break;
                 case 10:
                     min = 5;
                     max = 40;
                     var treasure = Randomizer(min, max);
-                    eventTitle = "Tresure";
+                    eventTitle = "Tresure!";
                     player.Gold += treasure;
-                    consequence = $"You found {treasure} gold.";
+                    consequence.Append($"\tYou found {treasure} gold.");
                     break;
                 default:
                     break;
 
             }
-            Console.WriteLine($"Day: {day} - {eventTitle}\n");
-            Console.WriteLine($"\t{consequence}");
 
-            combatLog.AppendLine($"Day: {day} - {eventTitle}\n");
-            combatLog.AppendLine($"\t{consequence}");
+            combatLog.AppendLine($"\nDay: {day} - {eventTitle}\n");
+            combatLog.AppendLine($"{consequence}");
 
             return (player.Health, player.Strength, player.Defence, player.Gold);
         }
 
-        public void EventBattle()
+        public StringBuilder EventBattle(Character player)
         {
             var min = 1;
-            var max = 4;
+            var max = 5;
             var randomFight = Randomizer(min, max);
+            var diceRoll = 0;
+            var damageDealt = 0;
+            var isMyTurn = true;
+            var statsAreDrawn = false;
             StringBuilder combatLog = new StringBuilder();
 
             Enemy enemy = new Enemy(randomFight);
+           // do
+           // {
+                do
+                {
+                    do
+                    {
+                        if (!statsAreDrawn)
+                        {
+                            Console.Clear();
+                            Graphics.DrawStats(player);
+                            Console.WriteLine("\n-----DUEL-----\n");
+                            enemy.DrawEnemyStats();
+                            statsAreDrawn = true;
+                        }
+                        if (isMyTurn)
+                        {
+                            diceRoll = Randomizer(1, 7);
+                            damageDealt = diceRoll + player.Strength + player.Damage;
+                            enemy.Health -= damageDealt;
+                            isMyTurn = false;
+                            statsAreDrawn = false;
 
+                            Console.WriteLine("Your turn: ");
+                            Console.WriteLine("Press any key to attack...");
+                            Console.ReadKey();
+
+                            Console.WriteLine($"You rolled {diceRoll} + Strength: {player.Strength} + Weapon Level: {player.Damage}.\n\tCombined you dealt {damageDealt} damage to {enemy.Name}.\n");
+                            combatLog.AppendLine($"\tYou rolled {diceRoll} and dealt {damageDealt} damage to {enemy.Name}.");
+                            Console.ReadKey();
+                        }
+                    } while (!statsAreDrawn);
+                    if (enemy.Health <= 0)
+                    {
+                        var loot = Randomizer(5, 20);
+                        player.Gold += loot;
+
+                        Console.WriteLine($"{enemy.Name} was slain.");
+                        combatLog.AppendLine($"\n\t{enemy.Name} was slain.");
+
+                        Console.WriteLine($"Scavanging the body you found {loot} gold!");
+                        Console.WriteLine("Press any key to continue...");
+                        Console.ReadKey();
+
+                        break;
+                    }
+                    if (!isMyTurn)
+                    {
+                        diceRoll = Randomizer(1, 7);
+                        damageDealt = diceRoll + enemy.Strength - player.Armor;
+                        player.Health -= damageDealt;
+                        isMyTurn = true;
+                        statsAreDrawn = false;
+
+                        Console.WriteLine($"{enemy.Name}'s turn:");
+                        Console.WriteLine("Press any key to continue...");
+                        Console.ReadKey();
+
+                        Console.WriteLine($"{enemy.Name} rolled {diceRoll} + Strength: {enemy.Strength}. \n\tCombined dealing {damageDealt} damage to you.\n");
+                        combatLog.AppendLine($"\t{enemy.Name} rolled {diceRoll} and dealt {damageDealt} damage to you.");
+                        Console.WriteLine("Press any key to continue...");
+                        Console.ReadKey();
+                    }
+                } while (!statsAreDrawn && player.Health > 0);
+            //} while (player.Health > 0 && enemy.Health > 0);
+
+            if (player.Health <= 0)
+            {
+                combatLog.AppendLine("\n\tYou died");
+                Console.WriteLine("You died...");
+                Console.ReadKey();
+            }
+            return combatLog;
         }
 
         public string EventTavern(Character player)
         {
             bool validSelection = true;
             var consequence = "";
+            var price = 10;
             do
             {
                 validSelection = true;
-                Console.WriteLine("You come across a tavern, do you want to spend 10 gold to stay the night?");
+                Console.WriteLine($"You come across a tavern, do you want to spend {price} gold to stay the night?");
                 Console.WriteLine("Y - Yes\nN - No");
                 var op = Console.ReadLine().ToUpper();
                 switch (op)
                 {
                     case "Y":
-                        if (player.Gold < 10)
-                        {                          
-                            consequence = ("You cannot afford to stay at the tavern.");
+                        if (player.Gold < price)
+                        {
+                            consequence = ("\tYou cannot afford to stay at the tavern.");
                         }
                         else
                         {
-                            player.Gold -= 10;
+                            player.Gold -= price;
                             player.Health = 10;
-                            consequence = ("You get a good nights rest, health restored.");
+                            consequence = ("\tYou get a good nights rest, health restored.");
                         }
                         break;
                     case "N":
-                        consequence = ("You decide not to stay at the tavern.");
+                        consequence = ("\tYou decide not to stay at the tavern.");
                         break;
                     default:
                         validSelection = false;
@@ -146,12 +222,12 @@ namespace Arena_Fighter
                     case "Y":
                         if (player.Gold < price)
                         {
-                            consequence = ($"You couldn't afford the {item}");
+                            consequence = ($"\tYou couldn't afford the {item}");
                         }
                         else
                         {
                             player.Gold -= price;
-                            consequence = ($"You purchased the {item}");
+                            consequence = ($"\tYou purchased the {item}");
                             if (item == "Better Armor")
                                 player.Armor++;
                             else if (item == "Health Potion")
@@ -161,7 +237,7 @@ namespace Arena_Fighter
                         }
                         break;
                     case "N":
-                        consequence = ("You decided not to purchase anything");
+                        consequence = ("\tYou decided not to purchase anything");
                         break;
                     default:
                         validSelection = false;

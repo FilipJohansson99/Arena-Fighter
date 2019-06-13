@@ -9,7 +9,9 @@ namespace Arena_Fighter
         {
             bool retired = false;
             var day = 1;
+
             Character player = new Character();
+            Gameplay game = new Gameplay();
             StringBuilder combatLog = new StringBuilder();
 
             while (!retired && player.Health > 0)
@@ -17,15 +19,18 @@ namespace Arena_Fighter
                 Console.Clear();
                 Graphics.DrawStats(player);
 
-                Gameplay game = new Gameplay();
                 game.Events(player, combatLog, day);
-                Console.ReadKey();
 
+                Console.WriteLine("\n\tPress any key to progress to the next day...");
+                Console.ReadKey();
 
                 day++;
             } 
+
             Console.Clear();
+
             Console.WriteLine(combatLog);
+
             Console.ReadKey();
         }           
     }

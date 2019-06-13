@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Lexicon.CSharp.InfoGenerator;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace Arena_Fighter
@@ -12,17 +14,20 @@ namespace Arena_Fighter
         public int Health { get; set; }
 
         public Enemy(int randomFight)
-        {
-            Name = "";
+        {            
+            Name = RandomizeName();
             Type = EnemyType(randomFight);
             (Strength, Health) = GenerateEnemy(Type);
         }
-
-
-
-
-
-
+        public void DrawEnemyStats()
+        {
+            StringBuilder enemy = new StringBuilder();
+            enemy.AppendLine("Name: " + Name);
+            enemy.AppendLine("Type: " + Type);
+            enemy.AppendLine("Strength: " + Strength.ToString());
+            enemy.AppendLine("Health: " + Health.ToString());
+            Console.WriteLine(enemy);
+        }
         private (int, int) GenerateEnemy(string Type)
         {
             var minHealth = 0;
@@ -33,8 +38,8 @@ namespace Arena_Fighter
             switch (Type)
             {
                 case "Human":
-                    minHealth = 3;
-                    maxHealth = 10;
+                    minHealth = 5;
+                    maxHealth = 15;
                     Health = Randomizer(minHealth, maxHealth);
                     minStrength = 1;
                     maxStrength = 3;
@@ -42,23 +47,23 @@ namespace Arena_Fighter
                     break;
                 case "Goblin":
                     minHealth = 3;
-                    maxHealth = 3;
+                    maxHealth = 10;
                     Health = Randomizer(minHealth, maxHealth);
                     minStrength = 1;
                     maxStrength = 1;
                     Strength = Randomizer(minStrength, maxStrength);
                     break;
                 case "Orc":
-                    minHealth = 5;
-                    maxHealth = 15;
+                    minHealth = 10;
+                    maxHealth = 20;
                     Health = Randomizer(minHealth, maxHealth);
                     minStrength = 3;
-                    maxStrength = 3;
+                    maxStrength = 5;
                     Strength = Randomizer(minStrength, maxStrength);
                     break;
                 case "Cheiftan":
-                    minHealth = 10;
-                    maxHealth = 20;
+                    minHealth = 15;
+                    maxHealth = 30;
                     Health = Randomizer(minHealth, maxHealth);
                     minStrength = 3;
                     maxStrength = 5;
@@ -67,11 +72,8 @@ namespace Arena_Fighter
             }
             return (Strength, Health);
         }
-
         private string EnemyType(int randomFight)
         {
-            var min = 0;
-            var max = 0;
             var type = "";
 
             switch (randomFight)
@@ -94,5 +96,21 @@ namespace Arena_Fighter
 
             return type;
         }
+        public int Randomizer(int min, int max)
+        {
+            Random random = new Random();
+            return random.Next(min, max);
+        }
+        public string RandomizeName()
+        {
+            InfoGenerator randomEnemy = new InfoGenerator(DateTime.Now.Millisecond);
+            TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
+
+            var enemyName = randomEnemy.NextFullName();
+            var name = textInfo.ToTitleCase(enemyName);
+
+            return name;
+        }
+
     }
 }

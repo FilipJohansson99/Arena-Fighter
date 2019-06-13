@@ -39,6 +39,7 @@ namespace Arena_Fighter
             {
                 do
                 {
+                    validName = true;
                     Console.Clear();
                     Console.Write("Enter the name of your character: ");
                     Name = Console.ReadLine();
@@ -131,11 +132,11 @@ namespace Arena_Fighter
             {
                 case "Warrior":
                     Strength = 5;
-                    Health = 5;
+                    Health = 10;
                     break;
                 case "Mage":
                     Strength = 3;
-                    Health = 3;
+                    Health = 10;
                     Defence = 2;
                     break;
             }

@@ -9,15 +9,18 @@ namespace Arena_Fighter
         public static void DrawStats(Character player)
         {
             StringBuilder drawStats = new StringBuilder();
-            drawStats.AppendLine(player.ClassName + " " + player.Name);
+            drawStats.AppendLine("");
+            drawStats.AppendLine(player.ClassName);
+            drawStats.AppendLine("Name: " + player.Name);
+            drawStats.AppendLine("");
             drawStats.AppendLine("Strength: " + player.Strength);
             drawStats.AppendLine("Health: " + player.Health);
-            drawStats.AppendLine("Defence: " + player.Defence);
-            drawStats.AppendLine("Armor: " + player.Armor);
-            drawStats.AppendLine("Damage: " + player.Damage);
-            drawStats.AppendLine("Health Potions: " + player.HealthPotions);
+            drawStats.AppendLine("Weapon Level: " + player.Damage);
+            drawStats.AppendLine("Armor Level: " + player.Armor);
+            drawStats.AppendLine("");
             drawStats.AppendLine("Gold: " + player.Gold);
-            drawStats.AppendLine("Skill Points: " + player.SkillPoints);
+            drawStats.AppendLine("Health Potions: " + player.HealthPotions);
+            //drawStats.AppendLine("Skill Points: " + player.SkillPoints);
             Console.WriteLine(drawStats);
         }
     }

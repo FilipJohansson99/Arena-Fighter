@@ -18,16 +18,21 @@ namespace Arena_Fighter
         public int Gold { get; set; }
         public Character()
         {
+
             Name = CreateCharacterName(Name);
 
             ClassName = CreateCharacterClass(ClassName);
 
             if (ClassName == "Custom")
-                (Strength, Health, Defence) = CreateCharacterStats(Strength, Health, Defence);
+                CreateCharacterStats();
             else
-                (Strength, Health, Defence) = GenerateCharacterStats(Strength, Health, Defence, ClassName);
+                GenerateCharacterStats();
 
-            (Damage, Armor, HealthPotions, Gold) = GenerateCharacterEquipment(Damage, Armor, HealthPotions, Gold, ClassName);
+            Damage = 1;
+
+            Armor = 1;
+
+            GenerateCharacterEquipment();
 
             SkillPoints = 0; ;
         }
@@ -43,8 +48,12 @@ namespace Arena_Fighter
                     Console.Clear();
                     Console.Write("Enter the name of your character: ");
                     Name = Console.ReadLine();
-                    if (Name.Length > 15 || String.IsNullOrWhiteSpace(Name))
+                    if (Name.Length > 20 || String.IsNullOrWhiteSpace(Name))
+                    {
                         validName = false;
+                        Console.WriteLine("The name can't be longer than 20 characters, or contain only empty characters.");
+                        Console.ReadKey();
+                    }
                     //else if CHARACTER WHITELIST
                 } while (!validName);
                 Console.WriteLine("Are you sure you want to be called {0}?", Name);
@@ -74,7 +83,7 @@ namespace Arena_Fighter
                 do
                 {
                     Console.Clear();
-                    Console.WriteLine("1 - Warrior\n2 - Mage\n3 - Scout\n4 - Thief\n5 - Custom");
+                    Console.WriteLine("1 - Warrior\n2 - Mage\n3 - Scout\n4 - Thief\n5 - Custom (NOT FINISHED)");
                     Console.Write("Select your preferred class: ");
                     op = Console.ReadLine().ToUpper();
                     switch (op)
@@ -82,22 +91,22 @@ namespace Arena_Fighter
                         case "1":
                         case "WARRIOR":
                             ClassName = "Warrior";
-                            Console.WriteLine("Warrior info:");
+                            Console.WriteLine("Warrior info: The warrior starts with lvl armor. Good for defensive build.");
                             break;
                         case "2":
                         case "MAGE":
                             ClassName = "Mage";
-                            Console.WriteLine("Mage info:");
+                            Console.WriteLine("Mage info: The mage starts with 1 health potion and a lvl 2 weapon. Good for balanced build.");
                             break;
                         case "3":
                         case "SCOUT":
                             ClassName = "Scout";
-                            Console.WriteLine("Scout info:");
+                            Console.WriteLine("Scout info: The scout starts with a lvl 2 weapon. Good for aggressive build.");
                             break;
                         case "4":
                         case "THIEF":
                             ClassName = "Thief";
-                            Console.WriteLine("Thief info:");
+                            Console.WriteLine("Thief info: the thief starts wounded but with 50 gold. Good for high risk build.");
                             break;
                         case "5":
                         case "CUSTOM":
@@ -126,7 +135,7 @@ namespace Arena_Fighter
 
             return ClassName;
         }
-        private (int, int, int) GenerateCharacterStats(int Strength, int Health, int Defence, string Class)
+        private void GenerateCharacterStats()
         {
             switch (ClassName)
             {
@@ -137,34 +146,41 @@ namespace Arena_Fighter
                 case "Mage":
                     Strength = 3;
                     Health = 10;
-                    Defence = 2;
+                    break;
+                case "Scout":
+                    Strength = 5;
+                    Health = 10;
+                    break;
+                case "Thief":
+                    Strength = 3;
+                    Health = 5;
                     break;
             }
-
-            return (Strength, Health, Defence);
         }
-        private (int, int, int, int) GenerateCharacterEquipment(int Damage, int Armor, int HealthPotions, int Gold, string Class)
+        private void GenerateCharacterEquipment()
         {
             switch (ClassName)
             {
                 case "Warrior":
-                    Armor = 2;
+                    Armor = 3;
                     break;
                 case "Mage":
                     HealthPotions = 1;
+                    Damage = 2;
                     break;
                 case "Scout":
                     Damage = 2;
                     break;
                 case "Thief":
+                    Gold = 50;
                     break;
                 case "Custom":
                     Gold = 50;
                     break;
             }
-            return (Damage, Armor, HealthPotions, Gold);
+            //return (Damage, Armor, HealthPotions, Gold);
         }
-        private (int, int, int) CreateCharacterStats(int Strength, int Health, int Defence)
+        private void CreateCharacterStats()
         {
             var skillPoints = 10;
             for (int i = skillPoints; i > 0; i--)
@@ -190,8 +206,24 @@ namespace Arena_Fighter
                 }
                 skillPoints -= 1;
             }
-
-            return (Strength, Health, Defence);
+        }
+        public static StringBuilder DrawStats(Character player)
+        {
+            StringBuilder drawStats = new StringBuilder();
+            drawStats.AppendLine("");
+            drawStats.AppendLine(player.ClassName);
+            drawStats.AppendLine("Name: " + player.Name);
+            drawStats.AppendLine("");
+            drawStats.AppendLine("Strength: " + player.Strength);
+            drawStats.AppendLine("Health: " + player.Health);
+            drawStats.AppendLine("Weapon Level: " + player.Damage);
+            drawStats.AppendLine("Armor Level: " + player.Armor);
+            drawStats.AppendLine("");
+            drawStats.AppendLine("Gold: " + player.Gold);
+            drawStats.AppendLine("Health Potions: " + player.HealthPotions);
+            //drawStats.AppendLine("Skill Points: " + player.SkillPoints);
+            Console.WriteLine(drawStats);
+            return drawStats;
         }
     }
 }

@@ -6,12 +6,65 @@ namespace Arena_Fighter
 {
     public class Gameplay
     {
+        public bool Morning(int day, Character player, StringBuilder combatLog)
+        {
+            var validSelection = true;
+            var retired = false;
+            Console.WriteLine("0 - Retire\n1 - Go Adventuring");
+            if (player.SkillPoints > 0)
+            {
+                Console.WriteLine("2 - Level Up");
+            }
+            if (player.HealthPotions > 0)
+            {
+                Console.WriteLine("3 - Consume Health Potion");
+            }
+            Console.WriteLine("");
+            Console.WriteLine($"Day: {day}");
+            do
+            {
+                validSelection = true;
+
+                var op = Console.ReadLine();
+                switch (op)
+                {
+                    case "0":
+                        retired = true;
+                        break;
+                    case "1":
+                        Events(player, combatLog, day);
+                        break;
+                    case "2":
+                        if (player.SkillPoints > 0)
+                        {
+
+                        }
+                        else
+                            validSelection = false;
+                        break;
+                    case "3":
+                        if (player.HealthPotions > 0)
+                        {
+                            player.HealthPotions -= 1;
+                            player.Health = 10;
+                        }
+                        else
+                            validSelection = false;
+                        break;
+                    default:
+                        validSelection = false;
+                        Console.WriteLine("Invalid Selection.");
+                        break;
+                }
+            } while (!validSelection);
+            return retired;
+        }
         public int Randomizer(int min, int max)
         {
             Random random = new Random();
             return random.Next(min, max);
         }
-        public (int, int, int, int) Events(Character player, StringBuilder combatLog, int day)
+        public void Events(Character player, StringBuilder combatLog, int day)
         {
             var min = 1;
             var max = 11;
@@ -56,15 +109,11 @@ namespace Arena_Fighter
                     break;
                 default:
                     break;
-
             }
 
             combatLog.AppendLine($"\nDay: {day} - {eventTitle}\n");
             combatLog.AppendLine($"{consequence}");
-
-            return (player.Health, player.Strength, player.Defence, player.Gold);
         }
-
         public StringBuilder EventBattle(Character player)
         {
             var min = 1;
@@ -86,7 +135,7 @@ namespace Arena_Fighter
                         if (!statsAreDrawn)
                         {
                             Console.Clear();
-                            Graphics.DrawStats(player);
+                            Character.DrawStats(player);
                             Console.WriteLine("\n-----DUEL-----\n");
                             enemy.DrawEnemyStats();
                             statsAreDrawn = true;
@@ -142,15 +191,9 @@ namespace Arena_Fighter
                 } while (!statsAreDrawn && player.Health > 0);
             //} while (player.Health > 0 && enemy.Health > 0);
 
-            if (player.Health <= 0)
-            {
-                combatLog.AppendLine("\n\tYou died");
-                Console.WriteLine("You died...");
-                Console.ReadKey();
-            }
+
             return combatLog;
         }
-
         public string EventTavern(Character player)
         {
             bool validSelection = true;

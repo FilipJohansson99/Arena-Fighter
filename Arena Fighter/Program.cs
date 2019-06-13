@@ -13,25 +13,40 @@ namespace Arena_Fighter
             Character player = new Character();
             Gameplay game = new Gameplay();
             StringBuilder combatLog = new StringBuilder();
+            combatLog.AppendLine("\nGAME LOG:\n");
+            combatLog.AppendLine("Your Character: \n");
+            combatLog.AppendLine(Character.DrawStats(player).ToString());
+            combatLog.AppendLine("\n GAME START:");
 
             while (!retired && player.Health > 0)
             {
                 Console.Clear();
-                Graphics.DrawStats(player);
+                Character.DrawStats(player);
+                retired = game.Morning(day, player, combatLog);
 
-                game.Events(player, combatLog, day);
-
-                Console.WriteLine("\n\tPress any key to progress to the next day...");
+                if (retired)
+                    Console.WriteLine("You retired...");
+                combatLog.AppendLine("\n\tYou retired.");
                 Console.ReadKey();
 
-                day++;
-            } 
-
+                if (player.Health <= 0)
+                {
+                    combatLog.AppendLine("\n\tYou died");
+                    Console.WriteLine("You died...");
+                    Console.ReadKey();
+                }
+                else if (player.Health > 0 && !retired)
+                {
+                    Console.WriteLine("\n\tPress any key to progress to the next day...");
+                    Console.ReadKey();
+                    day++;
+                }
+            }
             Console.Clear();
 
             Console.WriteLine(combatLog);
 
             Console.ReadKey();
-        }           
+        }
     }
 }

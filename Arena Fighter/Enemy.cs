@@ -17,7 +17,7 @@ namespace Arena_Fighter
         {            
             Name = RandomizeName();
             Type = EnemyType(randomFight);
-            (Strength, Health) = GenerateEnemy(Type);
+            GenerateEnemy(Type);
         }
         public void DrawEnemyStats()
         {
@@ -28,7 +28,7 @@ namespace Arena_Fighter
             enemy.AppendLine("Health: " + Health.ToString());
             Console.WriteLine(enemy);
         }
-        private (int, int) GenerateEnemy(string Type)
+        private void GenerateEnemy(string Type)
         {
             var minHealth = 0;
             var maxHealth = 0;
@@ -70,7 +70,6 @@ namespace Arena_Fighter
                     Strength = Randomizer(minStrength, maxStrength);
                     break;
             }
-            return (Strength, Health);
         }
         private string EnemyType(int randomFight)
         {

@@ -25,11 +25,13 @@ namespace Arena_Fighter
                 retired = game.Morning(day, player, combatLog);
 
                 if (retired)
+                {
                     Console.WriteLine("You retired...");
-                combatLog.AppendLine("\n\tYou retired.");
-                Console.ReadKey();
-
-                if (player.Health <= 0)
+                    combatLog.AppendLine("\n\tYou retired.");
+                    Console.ReadKey();
+                    break;
+                }
+                else if (player.Health <= 0)
                 {
                     combatLog.AppendLine("\n\tYou died");
                     Console.WriteLine("You died...");

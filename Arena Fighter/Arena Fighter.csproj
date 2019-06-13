@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <Reference Include="InfoGenerator">
-      <HintPath>..\..\..\..\..\..\InfoGenerator.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\InfoGenerator.dll</HintPath>
     </Reference>
   </ItemGroup>
 

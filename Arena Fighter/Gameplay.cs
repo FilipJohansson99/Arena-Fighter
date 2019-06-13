@@ -126,72 +126,67 @@ namespace Arena_Fighter
             StringBuilder combatLog = new StringBuilder();
 
             Enemy enemy = new Enemy(randomFight);
-           // do
-           // {
+            do
+            {
                 do
                 {
-                    do
+                    if (!statsAreDrawn)
                     {
-                        if (!statsAreDrawn)
-                        {
-                            Console.Clear();
-                            Character.DrawStats(player);
-                            Console.WriteLine("\n-----DUEL-----\n");
-                            enemy.DrawEnemyStats();
-                            statsAreDrawn = true;
-                        }
-                        if (isMyTurn)
-                        {
-                            diceRoll = Randomizer(1, 7);
-                            damageDealt = diceRoll + player.Strength + player.Damage;
-                            enemy.Health -= damageDealt;
-                            isMyTurn = false;
-                            statsAreDrawn = false;
-
-                            Console.WriteLine("Your turn: ");
-                            Console.WriteLine("Press any key to attack...");
-                            Console.ReadKey();
-
-                            Console.WriteLine($"You rolled {diceRoll} + Strength: {player.Strength} + Weapon Level: {player.Damage}.\n\tCombined you dealt {damageDealt} damage to {enemy.Name}.\n");
-                            combatLog.AppendLine($"\tYou rolled {diceRoll} and dealt {damageDealt} damage to {enemy.Name}.");
-                            Console.ReadKey();
-                        }
-                    } while (!statsAreDrawn);
-                    if (enemy.Health <= 0)
-                    {
-                        var loot = Randomizer(5, 20);
-                        player.Gold += loot;
-
-                        Console.WriteLine($"{enemy.Name} was slain.");
-                        combatLog.AppendLine($"\n\t{enemy.Name} was slain.");
-
-                        Console.WriteLine($"Scavanging the body you found {loot} gold!");
-                        Console.WriteLine("Press any key to continue...");
-                        Console.ReadKey();
-
-                        break;
+                        Console.Clear();
+                        Character.DrawStats(player);
+                        Console.WriteLine("\n-----DUEL-----\n");
+                        enemy.DrawEnemyStats();
+                        statsAreDrawn = true;
                     }
-                    if (!isMyTurn)
+                    if (isMyTurn)
                     {
                         diceRoll = Randomizer(1, 7);
-                        damageDealt = diceRoll + enemy.Strength - player.Armor;
-                        player.Health -= damageDealt;
-                        isMyTurn = true;
+                        damageDealt = diceRoll + player.Strength + player.Damage;
+                        enemy.Health -= damageDealt;
+                        isMyTurn = false;
                         statsAreDrawn = false;
 
-                        Console.WriteLine($"{enemy.Name}'s turn:");
-                        Console.WriteLine("Press any key to continue...");
+                        Console.WriteLine("Your turn: ");
+                        Console.WriteLine("Press any key to attack...");
                         Console.ReadKey();
 
-                        Console.WriteLine($"{enemy.Name} rolled {diceRoll} + Strength: {enemy.Strength}. \n\tCombined dealing {damageDealt} damage to you.\n");
-                        combatLog.AppendLine($"\t{enemy.Name} rolled {diceRoll} and dealt {damageDealt} damage to you.");
-                        Console.WriteLine("Press any key to continue...");
+                        Console.WriteLine($"You rolled {diceRoll} + Strength: {player.Strength} + Weapon Level: {player.Damage}.\n\tCombined you dealt {damageDealt} damage to {enemy.Name}.\n");
+                        combatLog.AppendLine($"\tYou rolled {diceRoll} and dealt {damageDealt} damage to {enemy.Name}.");
                         Console.ReadKey();
                     }
-                } while (!statsAreDrawn && player.Health > 0);
-            //} while (player.Health > 0 && enemy.Health > 0);
+                } while (!statsAreDrawn);
+                if (enemy.Health <= 0)
+                {
+                    var loot = Randomizer(5, 20);
+                    player.Gold += loot;
 
+                    Console.WriteLine($"{enemy.Name} was slain.");
+                    combatLog.AppendLine($"\n\t{enemy.Name} was slain.");
 
+                    Console.WriteLine($"Scavanging the body you found {loot} gold!");
+                    Console.WriteLine("Press any key to continue...");
+                    Console.ReadKey();
+
+                    break;
+                }
+                if (!isMyTurn)
+                {
+                    diceRoll = Randomizer(1, 7);
+                    damageDealt = diceRoll + enemy.Strength - player.Armor;
+                    player.Health -= damageDealt;
+                    isMyTurn = true;
+                    statsAreDrawn = false;
+
+                    Console.WriteLine($"{enemy.Name}'s turn:");
+                    Console.WriteLine("Press any key to continue...");
+                    Console.ReadKey();
+
+                    Console.WriteLine($"{enemy.Name} rolled {diceRoll} + Strength: {enemy.Strength}. \n\tCombined dealing {damageDealt} damage to you.\n");
+                    combatLog.AppendLine($"\t{enemy.Name} rolled {diceRoll} and dealt {damageDealt} damage to you.");
+                    Console.WriteLine("Press any key to continue...");
+                    Console.ReadKey();
+                }
+            } while (!statsAreDrawn && player.Health > 0);
             return combatLog;
         }
         public string EventTavern(Character player)

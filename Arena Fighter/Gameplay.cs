@@ -59,6 +59,11 @@ namespace Arena_Fighter
             } while (!validSelection);
             return retired;
         }
+        public void Evening(int day, Character player, StringBuilder combatLog)
+        {
+            Console.WriteLine("0 - Retire\n1 - Next Day\n2 - Level Up\n3 - Check Log");
+
+        }
         public int Randomizer(int min, int max)
         {
             Random random = new Random();
@@ -84,12 +89,13 @@ namespace Arena_Fighter
                 case 6:
                     eventTitle = "Duel";
                     consequence.Append(EventBattle(player));
-
                     break;
                 case 7:
+                    player.Health--;
                     eventTitle = "You injured yourself";
                     consequence.Append("\tYou took 1 health worth of damage.");
-                    player.Health--;
+                    Console.WriteLine("You injured yourself");
+                    Console.WriteLine("\tYou took 1 health worth of damage.");
                     break;
                 case 8:
                     eventTitle = "Travelling Merchant";
@@ -103,9 +109,11 @@ namespace Arena_Fighter
                     min = 5;
                     max = 40;
                     var treasure = Randomizer(min, max);
-                    eventTitle = "Tresure!";
                     player.Gold += treasure;
+                    eventTitle = "Tresure!";
                     consequence.Append($"\tYou found {treasure} gold.");
+                    Console.WriteLine("Treasure!");
+                    Console.WriteLine("\tYou found {treasure} gold.");
                     break;
                 default:
                     break;

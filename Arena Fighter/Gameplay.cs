@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Lexicon.CSharp.InfoGenerator;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace Arena_Fighter
@@ -63,6 +65,7 @@ namespace Arena_Fighter
         {
             Console.WriteLine("0 - Retire\n1 - Next Day\n2 - Level Up\n3 - Check Log");
 
+
         }
         public int Randomizer(int min, int max)
         {
@@ -113,7 +116,7 @@ namespace Arena_Fighter
                     eventTitle = "Tresure!";
                     consequence.Append($"\tYou found {treasure} gold.");
                     Console.WriteLine("Treasure!");
-                    Console.WriteLine("\tYou found {treasure} gold.");
+                    Console.WriteLine($"\tYou found {treasure} gold.");
                     break;
                 default:
                     break;
@@ -294,6 +297,77 @@ namespace Arena_Fighter
             return consequence;
 
         }
+
+        public void Town(int seed)
+        {
+            InfoGenerator infoGenerator = new InfoGenerator(seed);
+            TextInfo textInfo = new CultureInfo("en-US").TextInfo;
+
+            var town = textInfo.ToTitleCase(infoGenerator.NextCity());
+
+            Console.WriteLine("You are in the town of " + town);
+            Console.WriteLine("0 - Retire\n1 - Vist The Tavern\n2 - Visit The Markets\n3 - Fight in the Arena\n4 - Wander out in the Wilderness\n5 - View Log");
+            var op = Console.ReadKey(true).Key;
+            switch (op)
+            {
+                case ConsoleKey.D0:
+                case ConsoleKey.NumPad0:
+                    //retire
+                    break;
+                case ConsoleKey.D1:
+                case ConsoleKey.NumPad1:
+                    Tavern(seed);
+                    break;
+                case ConsoleKey.D2:
+                case ConsoleKey.NumPad2:
+                    Merchant(seed);
+                    break;
+                case ConsoleKey.D3:
+                case ConsoleKey.NumPad3:
+                    //fight
+                    break;
+                case ConsoleKey.D4:
+                case ConsoleKey.NumPad4:
+                    //wander
+                    break;
+                case ConsoleKey.D5:
+                case ConsoleKey.NumPad5:
+                    //view log
+                    break;
+                default:
+                    break;
+            }
+        }
+        public void Tavern(int seed)
+        {
+            InfoGenerator infoGenerator = new InfoGenerator(seed);
+            TextInfo textInfo = new CultureInfo("en-US").TextInfo;
+
+            var personality = textInfo.ToTitleCase(infoGenerator.NextPersonality());
+            var questgiver = textInfo.ToTitleCase(infoGenerator.NextFullName());
+            Console.WriteLine("You meet " + questgiver +" the " + personality);
+        }
+
+
+        public void Merchant(int seed)
+        {
+            InfoGenerator infoGenerator = new InfoGenerator(seed);
+            TextInfo textInfo = new CultureInfo("en-US").TextInfo;
+
+            var merchant = textInfo.ToTitleCase(infoGenerator.NextFirstName());
+            Console.WriteLine("Merchant " + merchant);
+        }
+
+
+
+        public int GenerateSeed()
+        {
+            var seed = DateTime.Now.Millisecond;
+            Console.WriteLine("Seed: " + seed);
+
+            return seed;
+        }
+
 
     }
 

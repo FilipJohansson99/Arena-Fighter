@@ -7,6 +7,19 @@ namespace Arena_Fighter
     {
         static void Main(string[] args)
         {
+            Gameplay game = new Gameplay();
+            var seed = game.GenerateSeed();
+            game.Town(seed);
+            Console.ReadKey();
+
+
+
+
+
+
+
+
+            /*
             bool retired = false;
             var day = 1;
 
@@ -49,6 +62,7 @@ namespace Arena_Fighter
             Console.WriteLine(combatLog);
 
             Console.ReadKey();
+            */
         }
     }
 }
